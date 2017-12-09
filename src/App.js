@@ -74,11 +74,12 @@ class App extends Component {
         </label>
         <input
           name="input"
-          handleInput={ev => this.handleInput(ev)}
+          onChange={(ev) => this.handleInput(ev)}
           value={this.state.input}
+          type='text'
         />
         <button
-          handleSubmit={this.handleSubmit}
+          onClick={this.handleSubmit}
         >
         Submit Query
         </button>
@@ -88,7 +89,7 @@ class App extends Component {
           // **************************************
             // input code here for proper mapping
 
-            
+
           })}
         </p>
       </div>
