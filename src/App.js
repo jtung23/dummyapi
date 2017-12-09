@@ -3,17 +3,31 @@
 // 1. API URL
 // 2. API-key
 // 3. Extra parameters
-// 4. 
 
+// {this.state.api_results ? (
+//   this.state.api_results.map(item => {
+// // **************************************
+//   // input code here for proper mapping
+
+
+//   }) 
+//   ) : (
+//   <h4> No Results </h4>
+//   )
+// }
 
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import axios from "axios"
+import JSONPretty from 'react-json-pretty';
+require('react-json-pretty/JSONPretty.adventure_time.styl');
+
 class App extends Component {
 
   state = {
     input: "",
+    json_results: '',
     api_results: []
   };
 
@@ -28,12 +42,12 @@ class App extends Component {
   // to run APIlookup with the appropriate params
   runAPI = () => {
     // add URL here
-    const url = "";
+    const url = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
 
     const params = {
-      // input api key here
-      "api-key": "",
-      "query": this.state.input
+      // input api key here and edit/add params
+      "api-key": "f0f27ef90a834d6989d3ed94b6714223",
+      "q": this.state.input
     };
 
     this.APIlookup(url, params)
@@ -42,11 +56,12 @@ class App extends Component {
         // ****************************************
         // edit res to properly go into state for map() in the jsx
         this.setState({
-          api_results: res
+          json_results: res
         })
       })
       .catch(err => console.log(err))
   };
+
 
 // handling query input field
   handleInput = (ev) => {
@@ -55,11 +70,24 @@ class App extends Component {
     })
   };
 
+
 // For submit button to use runAPI
   handleSubmit = (ev) => {
     ev.preventDefault();
     this.runAPI();
   };
+
+  loadJSON = () => {
+    if (this.state.json_results) {
+      return  <JSONPretty
+                id="json-pretty"
+                json={this.state.json_results}
+                themeClassName="   custom-json-pretty">
+              </JSONPretty>
+    } else {
+      return <h4> No Results Yet </h4>
+    }
+  }
 
   render() {
     return (
@@ -78,20 +106,13 @@ class App extends Component {
           value={this.state.input}
           type='text'
         />
-        <button
-          onClick={this.handleSubmit}
-        >
+        <button onClick={this.handleSubmit}>
         Submit Query
         </button>
         </form>
-        <p className="App-intro">
-          {this.state.api_results.map(item => {
-          // **************************************
-            // input code here for proper mapping
-
-
-          })}
-        </p>
+        <div>
+          {this.loadJSON()}
+        </div>
       </div>
     );
   }
