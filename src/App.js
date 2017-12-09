@@ -17,6 +17,7 @@ class App extends Component {
     api_results: []
   };
 
+// the API search method
   APIlookup = (url, params) => {
     return axios.get(url, {
         params: params 
@@ -24,6 +25,7 @@ class App extends Component {
     )
   };
   
+  // to run APIlookup with the appropriate params
   runAPI = () => {
     // add URL here
     const url = "";
@@ -46,12 +48,14 @@ class App extends Component {
       .catch(err => console.log(err))
   };
 
+// handling query input field
   handleInput = (ev) => {
     this.setState({
       input: ev.target.value
     })
   };
 
+// For submit button to use runAPI
   handleSubmit = (ev) => {
     ev.preventDefault();
     this.runAPI();
@@ -81,7 +85,10 @@ class App extends Component {
         </form>
         <p className="App-intro">
           {this.state.api_results.map(item => {
+          // **************************************
             // input code here for proper mapping
+
+            
           })}
         </p>
       </div>
