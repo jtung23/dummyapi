@@ -27,7 +27,8 @@ class App extends Component {
 
   state = {
     input: '',
-    placeid:'',
+    placeid:'ChIJG11cU-_Kj4AR3fVk1bLWsYQ',
+    yelpid: 'a-slice-of-new-york-san-jose',
     json_results: '',
     api_results: []
   };
@@ -71,7 +72,30 @@ class App extends Component {
       // input api key here and edit/add params
       "key": "AIzaSyAI3ZBCPyqDGRp9S20p7xisIcIfJrHhSGI",
       "placeid":this.state.placeid
-      // "q": this.state.input
+    };
+
+    this.APIlookup(url, params)
+      .then(res => {
+        console.log(res);
+        // ****************************************
+        // edit res to properly go into state for map() in the jsx
+        this.setState({
+          json_results: res
+        })
+      })
+      .catch(err => console.log(err))
+  };
+
+  runYelpAPI = () => {
+    // add URL here
+    const url = "https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/a-slice-of-new-york-san-jose";
+
+    const params = {
+      // input api key here and edit/add params
+      headers: {
+        'access_token': 'XwQSC62cYjT-1Gd9r7EumiSbiOyTobUwVsMBWKI-1Ep38A0ea-vRJqg6sm_Ip_blapSeng_Z9wdkCiGYMUNn3Xq8eM3I8FUErqoxJuDp6r3xSKiDTQE2GzAbKAkuWnYx',
+        'token_type': 'bearer'
+      }
     };
 
     this.APIlookup(url, params)
@@ -101,9 +125,15 @@ class App extends Component {
     this.runAPI();
   };
 
+//run google places api
   handleGooglePlacesSubmit = (ev) => {
     ev.preventDefault();
     this.runGoogleAPI();
+  };
+
+  handleYelpSubmit = (ev) => {
+    ev.preventDefault();
+    this.runYelpAPI();
   };
 
   loadJSON = () => {
@@ -126,7 +156,7 @@ class App extends Component {
           <h1 className="App-title">Welcome to React</h1>
         </header>
         <form>
-          <div>
+          <div className="queries">
             <label htmlFor="input">
               NYT Query
             </label>
@@ -140,9 +170,9 @@ class App extends Component {
               NYT Query
             </button>
           </div>
-          <div>
+          <div className="queries">
             <label htmlFor="input">
-              Google Places
+              Enter Google Places ID
             </label>
             <input
               name="placeid"
@@ -152,6 +182,20 @@ class App extends Component {
             />
             <button onClick={this.handleGooglePlacesSubmit}>
               Google Places Query
+            </button>
+          </div>
+          <div className="queries">
+            <label htmlFor="input">
+              Enter Yelp Business ID
+            </label>
+            <input
+              name="yelpid"
+              onChange={(ev) => this.handleInput(ev)}
+              value={this.state.yelpid}
+              type='text'
+            />
+            <button onClick={this.handleYelpSubmit}>
+              Yelp Query
             </button>
           </div>
         </form>
