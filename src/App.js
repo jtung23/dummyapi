@@ -26,15 +26,18 @@ require('react-json-pretty/JSONPretty.adventure_time.styl');
 class App extends Component {
 
   state = {
-    input: "",
+    input: '',
+    placeid:'ChIJG11cU-_Kj4AR3fVk1bLWsYQ',
+    yelpid: 'a-slice-of-new-york-san-jose',
     json_results: '',
     api_results: []
   };
 
 // the API search method
-  APIlookup = (url, params) => {
+  APIlookup = (url, params, header) => {
     return axios.get(url, {
-        params: params 
+        params: params,
+        headers: header
       }
     )
   };
@@ -62,12 +65,55 @@ class App extends Component {
       .catch(err => console.log(err))
   };
 
+  runGoogleAPI = () => {
+    // add URL here
+    const url = "https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json";
+
+    const params = {
+      // input api key here and edit/add params
+      "key": "AIzaSyAI3ZBCPyqDGRp9S20p7xisIcIfJrHhSGI",
+      "placeid":this.state.placeid
+    };
+
+    this.APIlookup(url, params)
+      .then(res => {
+        console.log(res);
+        // ****************************************
+        // edit res to properly go into state for map() in the jsx
+        this.setState({
+          json_results: res
+        })
+      })
+      .catch(err => console.log(err))
+  };
+
+  runYelpAPI = () => {
+    // add URL here
+    const url = "https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/a-slice-of-new-york-san-jose";
+
+    const params = {};
+    const headers = {
+      'Authorization': 'Bearer XwQSC62cYjT-1Gd9r7EumiSbiOyTobUwVsMBWKI-1Ep38A0ea-vRJqg6sm_Ip_blapSeng_Z9wdkCiGYMUNn3Xq8eM3I8FUErqoxJuDp6r3xSKiDTQE2GzAbKAkuWnYx'   
+    };
+
+    this.APIlookup(url, params, headers)
+      .then(res => {
+        console.log(res);
+        // ****************************************
+        // edit res to properly go into state for map() in the jsx
+        this.setState({
+          json_results: res
+        })
+      })
+      .catch(err => console.log(err))
+  };
 
 // handling query input field
   handleInput = (ev) => {
+    const { name, value } = ev.target;
     this.setState({
-      input: ev.target.value
-    })
+      [name]: value
+    });
   };
 
 
@@ -75,6 +121,17 @@ class App extends Component {
   handleSubmit = (ev) => {
     ev.preventDefault();
     this.runAPI();
+  };
+
+//run google places api
+  handleGooglePlacesSubmit = (ev) => {
+    ev.preventDefault();
+    this.runGoogleAPI();
+  };
+
+  handleYelpSubmit = (ev) => {
+    ev.preventDefault();
+    this.runYelpAPI();
   };
 
   loadJSON = () => {
@@ -97,18 +154,48 @@ class App extends Component {
           <h1 className="App-title">Welcome to React</h1>
         </header>
         <form>
-        <label htmlFor="input">
-          Query
-        </label>
-        <input
-          name="input"
-          onChange={(ev) => this.handleInput(ev)}
-          value={this.state.input}
-          type='text'
-        />
-        <button onClick={this.handleSubmit}>
-        Submit Query
-        </button>
+          <div className="queries">
+            <label htmlFor="input">
+              NYT Query
+            </label>
+            <input
+              name="input"
+              onChange={(ev) => this.handleInput(ev)}
+              value={this.state.input}
+              type='text'
+            />
+            <button onClick={this.handleSubmit}>
+              NYT Query
+            </button>
+          </div>
+          <div className="queries">
+            <label htmlFor="input">
+              Enter Google Places ID
+            </label>
+            <input
+              name="placeid"
+              onChange={(ev) => this.handleInput(ev)}
+              value={this.state.placeid}
+              type='text'
+            />
+            <button onClick={this.handleGooglePlacesSubmit}>
+              Google Places Query
+            </button>
+          </div>
+          <div className="queries">
+            <label htmlFor="input">
+              Enter Yelp Business ID
+            </label>
+            <input
+              name="yelpid"
+              onChange={(ev) => this.handleInput(ev)}
+              value={this.state.yelpid}
+              type='text'
+            />
+            <button onClick={this.handleYelpSubmit}>
+              Yelp Query
+            </button>
+          </div>
         </form>
         <div>
           {this.loadJSON()}
