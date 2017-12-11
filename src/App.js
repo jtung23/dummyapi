@@ -34,9 +34,10 @@ class App extends Component {
   };
 
 // the API search method
-  APIlookup = (url, params) => {
+  APIlookup = (url, params, header) => {
     return axios.get(url, {
-        params: params 
+        params: params,
+        headers: header
       }
     )
   };
@@ -90,15 +91,12 @@ class App extends Component {
     // add URL here
     const url = "https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/a-slice-of-new-york-san-jose";
 
-    const params = {
-      // input api key here and edit/add params
-      headers: {
-        'access_token': 'XwQSC62cYjT-1Gd9r7EumiSbiOyTobUwVsMBWKI-1Ep38A0ea-vRJqg6sm_Ip_blapSeng_Z9wdkCiGYMUNn3Xq8eM3I8FUErqoxJuDp6r3xSKiDTQE2GzAbKAkuWnYx',
-        'token_type': 'bearer'
-      }
+    const params = {};
+    const headers = {
+      'Authorization': 'Bearer XwQSC62cYjT-1Gd9r7EumiSbiOyTobUwVsMBWKI-1Ep38A0ea-vRJqg6sm_Ip_blapSeng_Z9wdkCiGYMUNn3Xq8eM3I8FUErqoxJuDp6r3xSKiDTQE2GzAbKAkuWnYx'   
     };
 
-    this.APIlookup(url, params)
+    this.APIlookup(url, params, headers)
       .then(res => {
         console.log(res);
         // ****************************************
