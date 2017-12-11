@@ -26,7 +26,8 @@ require('react-json-pretty/JSONPretty.adventure_time.styl');
 class App extends Component {
 
   state = {
-    input: "",
+    input: '',
+    placeid:'',
     json_results: '',
     api_results: []
   };
@@ -62,12 +63,35 @@ class App extends Component {
       .catch(err => console.log(err))
   };
 
+  runGoogleAPI = () => {
+    // add URL here
+    const url = "https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json";
+
+    const params = {
+      // input api key here and edit/add params
+      "key": "AIzaSyAI3ZBCPyqDGRp9S20p7xisIcIfJrHhSGI",
+      "placeid":this.state.placeid
+      // "q": this.state.input
+    };
+
+    this.APIlookup(url, params)
+      .then(res => {
+        console.log(res);
+        // ****************************************
+        // edit res to properly go into state for map() in the jsx
+        this.setState({
+          json_results: res
+        })
+      })
+      .catch(err => console.log(err))
+  };
 
 // handling query input field
   handleInput = (ev) => {
+    const { name, value } = ev.target;
     this.setState({
-      input: ev.target.value
-    })
+      [name]: value
+    });
   };
 
 
@@ -75,6 +99,11 @@ class App extends Component {
   handleSubmit = (ev) => {
     ev.preventDefault();
     this.runAPI();
+  };
+
+  handleGooglePlacesSubmit = (ev) => {
+    ev.preventDefault();
+    this.runGoogleAPI();
   };
 
   loadJSON = () => {
@@ -97,18 +126,34 @@ class App extends Component {
           <h1 className="App-title">Welcome to React</h1>
         </header>
         <form>
-        <label htmlFor="input">
-          Query
-        </label>
-        <input
-          name="input"
-          onChange={(ev) => this.handleInput(ev)}
-          value={this.state.input}
-          type='text'
-        />
-        <button onClick={this.handleSubmit}>
-        Submit Query
-        </button>
+          <div>
+            <label htmlFor="input">
+              NYT Query
+            </label>
+            <input
+              name="input"
+              onChange={(ev) => this.handleInput(ev)}
+              value={this.state.input}
+              type='text'
+            />
+            <button onClick={this.handleSubmit}>
+              NYT Query
+            </button>
+          </div>
+          <div>
+            <label htmlFor="input">
+              Google Places
+            </label>
+            <input
+              name="placeid"
+              onChange={(ev) => this.handleInput(ev)}
+              value={this.state.placeid}
+              type='text'
+            />
+            <button onClick={this.handleGooglePlacesSubmit}>
+              Google Places Query
+            </button>
+          </div>
         </form>
         <div>
           {this.loadJSON()}
