@@ -134,6 +134,11 @@ class App extends Component {
     this.runYelpAPI();
   };
 
+  ajaxCall = (ev) => {
+    ev.preventDefault();
+    console.log('ajax clicked');
+  };
+
   loadJSON = () => {
     if (this.state.json_results) {
       return  <JSONPretty
@@ -195,6 +200,12 @@ class App extends Component {
             <button onClick={this.handleYelpSubmit}>
               Yelp Query
             </button>
+
+          <div className="ajaxcall">
+            <button onClick={this.ajaxCall}>
+              Ajax call
+            </button>
+          </div>
           </div>
         </form>
         <div>
